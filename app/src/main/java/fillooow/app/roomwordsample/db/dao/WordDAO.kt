@@ -1,5 +1,6 @@
 package fillooow.app.roomwordsample.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -19,7 +20,7 @@ interface WordDAO {
 
     // Получаем все слова в алфавитном порядке
     @Query("SELECT * from word_table ORDER BY word ASC")
-    fun getAlphabetizedWords(): List<Word>
+    fun getAlphabetizedWords(): LiveData<List<Word>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) // Если такая запись уже есть в таблице, ничего не делаем
     suspend fun insert(word: Word)

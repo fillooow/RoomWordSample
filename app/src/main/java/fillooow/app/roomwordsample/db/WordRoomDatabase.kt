@@ -55,7 +55,8 @@ abstract class WordRoomDatabase : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.wordDao())
+//                    database.wordDao().getAlphabetizedWords() // если захочется сохранять состояние бд
+                    populateDatabase(wordDao = database.wordDao())
                 }
             }
         }

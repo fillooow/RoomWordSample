@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import fillooow.app.roomwordsample.db.entity.Word
+import fillooow.app.roomwordsample.db.entity.WordEntity
 
 /**
  * DAO (data access object) - в дао задаются запросы,
@@ -16,14 +16,14 @@ import fillooow.app.roomwordsample.db.entity.Word
  * Запросы должны вызваться не на UI потоке.
  */
 @Dao
-interface WordDAO {
+interface WordDao {
 
     // Получаем все слова в алфавитном порядке
     @Query("SELECT * from word_table ORDER BY word ASC")
-    fun getAlphabetizedWords(): LiveData<List<Word>>
+    fun getAlphabetizedWords(): LiveData<List<WordEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) // Если такая запись уже есть в таблице, ничего не делаем
-    suspend fun insert(word: Word)
+    suspend fun insert(wordEntity: WordEntity)
 
     @Query("DELETE FROM word_table") // Для удаления нескольких сущностей нет отдельной аннотации, так что используем @Query
     suspend fun deleteAll()

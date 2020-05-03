@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
  * Entity - представляют собой SQLite таблицу
  */
 @Entity(tableName = "word_table") // Представляет собой SQLite таблицу с именем word_table
-data class Word(
+data class WordEntity(
 
     @PrimaryKey
     @ColumnInfo(name = "word") // по умолчанию имя колонки будет совпадать с именем переменой. Тут для примера так же назвали.

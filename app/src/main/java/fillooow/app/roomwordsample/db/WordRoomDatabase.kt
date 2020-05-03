@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import fillooow.app.roomwordsample.db.dao.WordDao
 import fillooow.app.roomwordsample.db.entity.WordEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Database(
     entities = [WordEntity::class],
@@ -22,7 +25,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: WordRoomDatabase? = null
 
-        fun getDatabase(context: Context): WordRoomDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope): WordRoomDatabase {
 
             val tempInstance = INSTANCE
             if (tempInstance != null) {
@@ -35,11 +38,35 @@ abstract class WordRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     WordRoomDatabase::class.java,
                     "word_database"
-                ).build()
-                INSTANCE = instance
+                ).addCallback(WordDatabaseCallback(scope = scope))
+                    .build()
 
+                INSTANCE = instance
                 return instance
             }
+        }
+    }
+
+    private class WordDatabaseCallback(
+        private val scope: CoroutineScope
+    ) : RoomDatabase.Callback() {
+
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
+            INSTANCE?.let { database ->
+                scope.launch {
+                    populateDatabase(database.wordDao())
+                }
+            }
+        }
+
+        private suspend fun populateDatabase(wordDao: WordDao) {
+
+            wordDao.deleteAll()
+
+            wordDao.insert(wordEntity = WordEntity("Hello"))
+            wordDao.insert(wordEntity = WordEntity("cruel"))
+            wordDao.insert(wordEntity = WordEntity("world"))
         }
     }
 }

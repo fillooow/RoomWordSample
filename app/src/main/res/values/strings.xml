@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">RoomWordSample</string>
     <string name="add_word">Добавить слово</string>
+    <string name="hint_word">Слово…</string>
+    <string name="button_save">Сохранить</string>
+    <string name="empty_not_saved">Слово не должно быть пустым</string>
 </resources>
